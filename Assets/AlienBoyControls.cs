@@ -48,7 +48,6 @@ public class AlienBoyControls : MonoBehaviour {
 		playerSoul = soul;
 //		Debug.Log (soul.color.x);
 		GetComponent<Renderer> ().material.SetVector ("_Color", soul.color); 
-		GetComponent<Renderer> ().material.SetTexture	 (		"_Color", soul.color);
 		Material s = GameObject.Find ("Stage").GetComponent<Renderer> ().material;
 	
 	}
