@@ -9,6 +9,9 @@ public class AlienBoyControls : MonoBehaviour {
 	float maxDamage=10f;
 	float camo=1f;
 	float maxCamo=1f;
+	
+
+	public PlayerSoul playerSoul;
 
 	GameObject camoBar;
 	GameObject healthBar;
@@ -20,32 +23,34 @@ public class AlienBoyControls : MonoBehaviour {
 		healthBar = GameObject.Find ("Health");
 		camoBar = GameObject.Find ("Camo");
 		bounds.x -= .3f;
+
 	}
+
+
 	
 	// Update is called once per frame
 	void Update () {
-		float h = Input.GetAxisRaw ("Horizontal");
-		float v = Input.GetAxisRaw ("Vertical");
+		float h = Input.GetAxisRaw (playerSoul.horizontal);
+		float v = Input.GetAxisRaw (playerSoul.vertical);
 		bool stealth = Input.GetAxisRaw ("Stealth")==1;
-		if (stealth&&camo!=0) {
-			r.material.SetFloat ("_alpha", 0);
-			camo-=.007f;
-		} 
-		else {
-			camo+=.001f;
-			r.material.SetFloat ("_alpha", 1);
-		}
 		  
 		damage=Mathf.Clamp (damage, 0, maxDamage);
 		camo=Mathf.Clamp (camo, 0, maxCamo);
-		healthBar.transform.localScale = new Vector3 (damage / maxDamage, 
+		/*healthBar.transform.localScale = new Vector3 (damage / maxDamage, 
 		                                           healthBar.transform.localScale.y, 
 		                                             healthBar.transform.localScale.z);
-		camoBar.transform.localScale = new Vector3 (camo / maxCamo, 
-		                                              camoBar.transform.localScale.y, 
-		                                              camoBar.transform.localScale.z);
+*/	
 		move (h, v);
 
+	}
+
+	public void setPlayerSoul(PlayerSoul soul){
+		playerSoul = soul;
+//		Debug.Log (soul.color.x);
+		GetComponent<Renderer> ().material.SetVector ("_Color", soul.color); 
+		GetComponent<Renderer> ().material.SetTexture	 (		"_Color", soul.color);
+		Material s = GameObject.Find ("Stage").GetComponent<Renderer> ().material;
+	
 	}
 
 	void move(float h,float v){
@@ -60,12 +65,12 @@ public class AlienBoyControls : MonoBehaviour {
 
 		if (collisionInfo.gameObject.name == "Spotlight") {
 			damage+=.0175f;
-			r.material.SetFloat ("_alpha", 1);
+			//r.material.SetFloat ("_alpha", 1);
 
 		}
-		Debug.Log (collisionInfo.gameObject.name);
 		if (collisionInfo.gameObject.name == "pizzaGame(Clone)") {
 			Destroy(collisionInfo.gameObject);
 		}
 	}
 }
+

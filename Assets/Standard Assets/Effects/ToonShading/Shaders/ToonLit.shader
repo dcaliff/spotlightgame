@@ -1,6 +1,7 @@
 Shader "Toon/Lit" {
 	Properties {
 		_Color ("Main Color", Color) = (0.5,0.5,0.5,0)
+		_Ambient ("Ambient Color", Color) = (.3,.1,.1)
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_Ramp ("Toon Ramp (RGB)", 2D) = "gray" {} 
 		_alpha ("Alpha Value", float) = 0 
@@ -30,7 +31,8 @@ inline half4 LightingToonRamp (SurfaceOutput s, half3 lightDir, half atten)
 	
 	half4 c;
 	c.rgb = s.Albedo * _LightColor0.rgb * ramp * (atten * 2);
-	c.a = (c.r+c.g+c.b+.2)*_alpha;
+	c.a = (c.r+c.g+c.b)*_alpha*2;
+	
 
 	return c;
 }
@@ -38,6 +40,7 @@ inline half4 LightingToonRamp (SurfaceOutput s, half3 lightDir, half atten)
 
 sampler2D _MainTex;
 float4 _Color;
+float4 _Ambient;
 
 struct Input {
 	float2 uv_MainTex : TEXCOORD0;
@@ -45,6 +48,7 @@ struct Input {
 
 void surf (Input IN, inout SurfaceOutput o) {
 	half4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+	//c.rgb += _Ambient;
 	o.Albedo = c.rgb;
 	o.Alpha = c.a;
 }

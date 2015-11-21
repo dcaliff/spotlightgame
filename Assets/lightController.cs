@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class lightController : MonoBehaviour {
 
 	Vector3 movement;
@@ -9,6 +10,8 @@ public class lightController : MonoBehaviour {
 	SphereCollider sphere;
 	Light light;
 	Vector3 bounds;
+	public PlayerSoul player;
+
 
 	// Use this for initialization
 	void Start () {
@@ -20,12 +23,17 @@ public class lightController : MonoBehaviour {
 		bounds.y = 6.5f;
 
 	}
-	
+
+	public void setPlayer(PlayerSoul ps){
+		player=ps;
+		GetComponent<Light> ().color=ps.colorLight;
+	}
 	// Update is called once per frame
 	// Update is called once per frame
 	void Update () {
-		float h = Input.GetAxisRaw ("Horizontal2");
-		float v = Input.GetAxisRaw ("Vertical2");
+		float h = Input.GetAxisRaw (player.horizontal);
+
+		float v = Input.GetAxisRaw (player.vertical);
 		float z = Input.GetAxisRaw ("Height");
 		move (h, z, v);
 		sphere.radius = rToH * transform.position.y;
@@ -35,7 +43,8 @@ public class lightController : MonoBehaviour {
 	
 	void move(float h,float z,float v){
 		movement.Set (h, z, v);
-		movement = movement.normalized * speed * Time.deltaTime;
+		float mag = Mathf.Sqrt ((h * h) + (v * v));
+		movement = movement.normalized * speed * Time.deltaTime*mag;
 		Vector3 position = transform.position;
 		position += movement;
 		position = new Vector3 (Mathf.Clamp (position.x, -bounds.x, bounds.x), 
